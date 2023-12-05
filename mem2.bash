@@ -9,7 +9,7 @@ function append_n() {
     done
 }
 
-OUTPUT_PATH="report.log"
+OUTPUT_PATH="report2.log"
 N=10
 LOG_EVERY=100000
 
