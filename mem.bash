@@ -1,13 +1,5 @@
 #!/bin/bash
 
-# ======== ARRAYS ========
-#   arr[i]=<val>
-#   ${arr[i]}
-#   ${arr[*]} # Все записи в массиве
-#   ${!arr[*]}# Все индексы в массиве
-#   ${#arr[*]}# Количество записей в массиве
-#   ${#arr[0]}# Длина первой записи (нумерация с нуля)
-
 function append_n() {
     local k=0
     local len=${#arr[*]}
@@ -20,6 +12,8 @@ function append_n() {
 OUTPUT_PATH="report.log"
 N=10
 LOG_EVERY=100000
+
+echo $$ > ".pid"
 
 echo "" > $OUTPUT_PATH
 
