@@ -111,21 +111,28 @@ fig.update_layout(
 
 d = []
 for i, (processes, _, _) in enumerate(data):
-    for p in processes:
+    for j, p in enumerate(processes):
         d.append(
-            dict(pid_command=f"[{p.pid}] {p.command}", start=i * 10, end=i * 10 + 11)
+            dict(
+                pos=j,
+                pid_command=f"[{p.pid}] {p.command}",
+                start=i * 10,
+                end=i * 10 + 10,
+            )
         )
 df = pd.DataFrame(d)
 
 df["delta"] = df["end"] - df["start"]
-fig = px.timeline(
-    df, x_start="start", x_end="end", y="pid_command", color="pid_command"
-)
-fig.layout.xaxis.type = "linear"
-for i in range(len(fig.data)):
-    fig.data[i].x = df.delta.tolist()
+time_line = px.timeline(df, x_start="start", x_end="end", y="pos", color="pid_command")
+time_line.update_xaxes(type="linear")
+time_line.update_yaxes(type="category")
 
-fig.update_layout(
+
+for i in range(len(time_line.data)):
+    time_line.data[i].x = df.delta.tolist()
+
+time_line.update_layout(
     xaxis_title="Seconds",
-    font=dict(family="Courier New, monospace", size=18, color="RebeccaPurple"),
+    font=dict(family="Courier New, monospace", size=14, color="RebeccaPurple"),
+    yaxis=dict(autorange="reversed"),
 ).show()
