@@ -10,8 +10,7 @@ class process:
         splited = s.strip().split()
         self.pid = splited[0]
         self.command = splited[-1]
-        self.virt = self.parse_top_format(splited[4])
-        self.rss = self.parse_top_format(splited[5])
+        self.virt_mem = self.parse_top_format(splited[4])
 
     def __str__(self) -> str:
         return self.pid
@@ -61,7 +60,7 @@ def read_one_iter(file: TextIOWrapper):
 
 
 data = []
-with open("mem.stat") as file:
+with open("results-1.2/mem.stat") as file:
     pid = file.readline()
 
     res = read_one_iter(file)
@@ -71,33 +70,38 @@ with open("mem.stat") as file:
 
 x = [10 * i for i in range(len(data))]
 
+# TARGET_PID = "3448"
+TARGET_PID = "5068"
+
 fig = go.Figure()
 fig.add_trace(
     go.Scatter(
         x=x,
-        y=[processes[0].virt for (processes, _, _) in data],
-        name="virt",
+        y=[
+            next(
+                filter(
+                    lambda ip: ip[1].pid == TARGET_PID or ip[0] == len(processes) - 1,
+                    enumerate(processes),
+                )
+            )[1].virt_mem
+            for (processes, _, _) in data
+        ],
+        name="Process virt mem",
     )
 )
-fig.add_trace(
-    go.Scatter(
-        x=x,
-        y=[processes[0].rss for (processes, _, _) in data],
-        name="rss",
-    )
-)
+
 fig.add_trace(
     go.Scatter(
         x=x,
         y=[mem_used for (_, (_, mem_used), _) in data],
-        name="mem",
+        name="Total mem",
     )
 )
 fig.add_trace(
     go.Scatter(
         x=x,
         y=[swap_used for (_, _, (_, swap_used)) in data],
-        name="swap",
+        name="Total swap",
     )
 )
 fig.update_layout(
@@ -125,7 +129,7 @@ df = pd.DataFrame(d)
 df["delta"] = df["end"] - df["start"]
 time_line = px.timeline(df, x_start="start", x_end="end", y="pos", color="pid_command")
 time_line.update_xaxes(type="linear")
-time_line.update_yaxes(type="category")
+time_line.update_yaxes(type="category", categoryorder="category descending")
 
 
 for i in range(len(time_line.data)):
@@ -134,5 +138,4 @@ for i in range(len(time_line.data)):
 time_line.update_layout(
     xaxis_title="Seconds",
     font=dict(family="Courier New, monospace", size=14, color="RebeccaPurple"),
-    yaxis=dict(autorange="reversed"),
 ).show()
