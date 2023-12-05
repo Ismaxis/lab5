@@ -1,0 +1,7 @@
+Mem: 1.77G
+Swp: 820M
+$ genconf PAGESIZE -> 4096
+Mem free: 1400MiB
+Swap free: 765MiB
+
+

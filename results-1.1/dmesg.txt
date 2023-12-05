@@ -1,0 +1,2 @@
+[ 2558.992008] Out of memory: Killed process 3448 (bash) total-vm:2545188kB, anon-rss:1591404kB, file-rss:0kB, shmem-rss:0kB, UID:0 pgtables:4612kB oom_score_adj:0
+[ 2559.124810] oom_reaper: reaped process 3448 (bash), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
