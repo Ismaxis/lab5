@@ -70,10 +70,10 @@ with open("results-1.2/mem.stat") as file:
 
 x = [10 * i for i in range(len(data))]
 
+fig = go.Figure()
+
 # TARGET_PID = "3448"
 TARGET_PID = "5068"
-
-fig = go.Figure()
 fig.add_trace(
     go.Scatter(
         x=x,
@@ -86,10 +86,26 @@ fig.add_trace(
             )[1].virt_mem
             for (processes, _, _) in data
         ],
-        name="Process virt mem",
+        name="Process1 virt mem",
     )
 )
 
+TARGET_PID = "5066"
+fig.add_trace(
+    go.Scatter(
+        x=x,
+        y=[
+            next(
+                filter(
+                    lambda ip: ip[1].pid == TARGET_PID or ip[0] == len(processes) - 1,
+                    enumerate(processes),
+                )
+            )[1].virt_mem
+            for (processes, _, _) in data
+        ],
+        name="Process2 virt mem",
+    )
+)
 fig.add_trace(
     go.Scatter(
         x=x,
