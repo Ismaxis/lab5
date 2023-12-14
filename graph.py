@@ -54,13 +54,13 @@ def read_one_iter(file: TextIOWrapper):
     swap = parse_swap(file.readline())
     _ = file.readline()
     _ = file.readline()
-    processes = [process(file.readline()) for _ in range(5)]
+    processes = [process(file.readline()) for _ in range(10)]
 
     return (processes, mem, swap)
 
 
 data = []
-with open("results-1.2/mem.stat") as file:
+with open("results-2.2/1375-mem.stat") as file:
     pid = file.readline()
 
     res = read_one_iter(file)
@@ -73,39 +73,72 @@ x = [10 * i for i in range(len(data))]
 fig = go.Figure()
 
 # TARGET_PID = "3448"
-TARGET_PID = "5068"
-fig.add_trace(
-    go.Scatter(
-        x=x,
-        y=[
-            next(
-                filter(
-                    lambda ip: ip[1].pid == TARGET_PID or ip[0] == len(processes) - 1,
-                    enumerate(processes),
-                )
-            )[1].virt_mem
-            for (processes, _, _) in data
-        ],
-        name="Process1 virt mem",
+# TARGET_PID = "5068"
+for TARGET_PID in [
+    "5428",
+    "5433",
+    "5436",
+    "5438",
+    "5440",
+    "5442",
+    "5444",
+    "5446",
+    "5448",
+    "5450",
+    "5452",
+    "5457",
+    "5459",
+    "5461",
+    "5463",
+    "5465",
+    "5467",
+    "5469",
+    "5471",
+    "5473",
+    "5478",
+    "5480",
+    "5482",
+    "5484",
+    "5486",
+    "5488",
+    "5490",
+    "5492",
+    "5497",
+    "5499",
+]:
+    fig.add_trace(
+        go.Scatter(
+            x=x,
+            y=[
+                next(
+                    filter(
+                        lambda ip: ip[1].pid == TARGET_PID
+                        or ip[0] == len(processes) - 1,
+                        enumerate(processes),
+                    )
+                )[1].virt_mem
+                for (processes, _, _) in data
+            ],
+            name=f"Process {TARGET_PID} virt mem",
+        )
     )
-)
 
-TARGET_PID = "5066"
-fig.add_trace(
-    go.Scatter(
-        x=x,
-        y=[
-            next(
-                filter(
-                    lambda ip: ip[1].pid == TARGET_PID or ip[0] == len(processes) - 1,
-                    enumerate(processes),
-                )
-            )[1].virt_mem
-            for (processes, _, _) in data
-        ],
-        name="Process2 virt mem",
-    )
-)
+# TARGET_PID = "5066"
+# fig.add_trace(
+#     go.Scatter(
+#         x=x,
+#         y=[
+#             next(
+#                 filter(
+#                     lambda ip: ip[1].pid == TARGET_PID or ip[0] == len(processes) - 1,
+#                     enumerate(processes),
+#                 )
+#             )[1].virt_mem
+#             for (processes, _, _) in data
+#         ],
+#         name="Process2 virt mem",
+#     )
+# )
 fig.add_trace(
     go.Scatter(
         x=x,
